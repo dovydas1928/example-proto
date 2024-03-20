@@ -24,3 +24,27 @@ message UserResponse {
 service UserService {
   rpc GetUser(UserRequest) returns (UserResponse) {}
 }
+
+// testas
+
+service TestBoardService {
+  // Establishes a connection that remains open for sending messages
+  rpc Connect (ConnectRequest) returns (stream Message) {}
+  rpc PrintName(PrintNameRequest) returns (PrintNameResponse) {}
+}
+
+message ConnectRequest {
+  string clientId = 1;
+}
+
+message Message {
+  string text = 1;
+}
+
+message PrintNameRequest {
+  string clientId = 1;
+}
+
+message PrintNameResponse {
+  string message = 1; // Confirmation message or error information
+}
