@@ -1,11 +1,13 @@
-# example-proto
+# Bobr Protobuf
 
-Provide proto for goravel/example
+To compile Protobuf files we need these tools:
+
+https://github.com/protocolbuffers/protobuf/releases/tag/v27.2
+https://github.com/protocolbuffers/protobuf-go/releases/tag/v1.34.2
+https://github.com/grpc/grpc-go/releases/tag/cmd%2Fprotoc-gen-go-grpc%2Fv1.4.0
+
+### Command:
 
 ```shell
-# 1. Install Protocol Buffers
-#    https://github.com/protocolbuffers/protobuf/releases
-# 2. Install protoc-gen-gofast
-#    go install github.com/gogo/protobuf/protoc-gen-gofast
-protoc --gofast_out=plugins=grpc:. *.proto
+protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative tb.proto
 ```

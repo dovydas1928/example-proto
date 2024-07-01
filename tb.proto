@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package tb;
+
+option go_package = "github.com/dovydas1928/example-proto";
+
+import "google/protobuf/timestamp.proto";
+
+message Metadata {
+    string version = 1;
+}
+
+message RegistrationRequest {
+    string clientId = 1;
+    string clientType = 2;
+    google.protobuf.Timestamp timestamp = 3;
+    Metadata metadata = 4;
+}
+
+message RegistrationResponse {
+    string status = 1;
+    string message = 2;
+    ErrorDetails error = 3;
+}
+
+message ErrorDetails {
+    int32 code = 1;
+    string message = 2;
+}
+
+service RegistrationService {
+    rpc RegisterClient (RegistrationRequest) returns (RegistrationResponse);
+}
