@@ -15,17 +15,20 @@ message RegistrationRequest {
     Metadata metadata = 4;
 }
 
-message RegistrationResponse {
+message Response {
     string status = 1;
     string message = 2;
-    ErrorDetails error = 3;
 }
 
-message ErrorDetails {
-    int32 code = 1;
-    string message = 2;
+message ConnectRequest {
+  string clientId = 1;
 }
 
-service RegistrationService {
-    rpc RegisterClient (RegistrationRequest) returns (RegistrationResponse);
+message MessageStream {
+  string message = 1;
+}
+
+service TestBoardService {
+    rpc RegisterClient (RegistrationRequest) returns (Response);
+    rpc ConnectToServer (ConnectRequest) returns (stream MessageStream);
 }
