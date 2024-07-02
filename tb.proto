@@ -4,8 +4,6 @@ package tb;
 
 option go_package = "github.com/dovydas1928/example-proto";
 
-import "time";
-
 message Metadata {
     string version = 1;
 }
@@ -13,7 +11,7 @@ message Metadata {
 message RegistrationRequest {
     string clientId = 1;
     string clientType = 2;
-    time.Time timestamp = 3;
+    int64 timestamp = 3;
     Metadata metadata = 4;
 }
 
