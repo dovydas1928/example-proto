@@ -4,7 +4,7 @@ package tb;
 
 option go_package = "github.com/dovydas1928/example-proto";
 
-import "google/protobuf/timestamp.proto";
+import "time";
 
 message Metadata {
     string version = 1;
@@ -13,7 +13,7 @@ message Metadata {
 message RegistrationRequest {
     string clientId = 1;
     string clientType = 2;
-    google.protobuf.Timestamp timestamp = 3;
+    time.Time timestamp = 3;
     Metadata metadata = 4;
 }
 
