@@ -8,7 +8,7 @@ message Metadata {
     string version = 1;
 }
 
-message RegistrationRequest {
+message RegisterRequest {
     string clientId = 1;
     string clientType = 2;
     int64 timestamp = 3;
@@ -29,6 +29,6 @@ message MessageStream {
 }
 
 service TestBoardService {
-    rpc RegisterClient (RegistrationRequest) returns (Response);
-    rpc ConnectToServer (ConnectRequest) returns (stream MessageStream);
+    rpc Register (RegisterRequest) returns (Response);
+    rpc Connect (ConnectRequest) returns (stream MessageStream);
 }

@@ -19,16 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	TestBoardService_RegisterClient_FullMethodName  = "/tb.TestBoardService/RegisterClient"
-	TestBoardService_ConnectToServer_FullMethodName = "/tb.TestBoardService/ConnectToServer"
+	TestBoardService_Register_FullMethodName = "/tb.TestBoardService/Register"
+	TestBoardService_Connect_FullMethodName  = "/tb.TestBoardService/Connect"
 )
 
 // TestBoardServiceClient is the client API for TestBoardService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TestBoardServiceClient interface {
-	RegisterClient(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*Response, error)
-	ConnectToServer(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (TestBoardService_ConnectToServerClient, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
+	Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (TestBoardService_ConnectClient, error)
 }
 
 type testBoardServiceClient struct {
@@ -39,23 +39,23 @@ func NewTestBoardServiceClient(cc grpc.ClientConnInterface) TestBoardServiceClie
 	return &testBoardServiceClient{cc}
 }
 
-func (c *testBoardServiceClient) RegisterClient(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*Response, error) {
+func (c *testBoardServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Response)
-	err := c.cc.Invoke(ctx, TestBoardService_RegisterClient_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, TestBoardService_Register_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testBoardServiceClient) ConnectToServer(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (TestBoardService_ConnectToServerClient, error) {
+func (c *testBoardServiceClient) Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (TestBoardService_ConnectClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &TestBoardService_ServiceDesc.Streams[0], TestBoardService_ConnectToServer_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &TestBoardService_ServiceDesc.Streams[0], TestBoardService_Connect_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &testBoardServiceConnectToServerClient{ClientStream: stream}
+	x := &testBoardServiceConnectClient{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -65,16 +65,16 @@ func (c *testBoardServiceClient) ConnectToServer(ctx context.Context, in *Connec
 	return x, nil
 }
 
-type TestBoardService_ConnectToServerClient interface {
+type TestBoardService_ConnectClient interface {
 	Recv() (*MessageStream, error)
 	grpc.ClientStream
 }
 
-type testBoardServiceConnectToServerClient struct {
+type testBoardServiceConnectClient struct {
 	grpc.ClientStream
 }
 
-func (x *testBoardServiceConnectToServerClient) Recv() (*MessageStream, error) {
+func (x *testBoardServiceConnectClient) Recv() (*MessageStream, error) {
 	m := new(MessageStream)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -86,8 +86,8 @@ func (x *testBoardServiceConnectToServerClient) Recv() (*MessageStream, error) {
 // All implementations must embed UnimplementedTestBoardServiceServer
 // for forward compatibility
 type TestBoardServiceServer interface {
-	RegisterClient(context.Context, *RegistrationRequest) (*Response, error)
-	ConnectToServer(*ConnectRequest, TestBoardService_ConnectToServerServer) error
+	Register(context.Context, *RegisterRequest) (*Response, error)
+	Connect(*ConnectRequest, TestBoardService_ConnectServer) error
 	mustEmbedUnimplementedTestBoardServiceServer()
 }
 
@@ -95,11 +95,11 @@ type TestBoardServiceServer interface {
 type UnimplementedTestBoardServiceServer struct {
 }
 
-func (UnimplementedTestBoardServiceServer) RegisterClient(context.Context, *RegistrationRequest) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterClient not implemented")
+func (UnimplementedTestBoardServiceServer) Register(context.Context, *RegisterRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedTestBoardServiceServer) ConnectToServer(*ConnectRequest, TestBoardService_ConnectToServerServer) error {
-	return status.Errorf(codes.Unimplemented, "method ConnectToServer not implemented")
+func (UnimplementedTestBoardServiceServer) Connect(*ConnectRequest, TestBoardService_ConnectServer) error {
+	return status.Errorf(codes.Unimplemented, "method Connect not implemented")
 }
 func (UnimplementedTestBoardServiceServer) mustEmbedUnimplementedTestBoardServiceServer() {}
 
@@ -114,42 +114,42 @@ func RegisterTestBoardServiceServer(s grpc.ServiceRegistrar, srv TestBoardServic
 	s.RegisterService(&TestBoardService_ServiceDesc, srv)
 }
 
-func _TestBoardService_RegisterClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegistrationRequest)
+func _TestBoardService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestBoardServiceServer).RegisterClient(ctx, in)
+		return srv.(TestBoardServiceServer).Register(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestBoardService_RegisterClient_FullMethodName,
+		FullMethod: TestBoardService_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestBoardServiceServer).RegisterClient(ctx, req.(*RegistrationRequest))
+		return srv.(TestBoardServiceServer).Register(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestBoardService_ConnectToServer_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _TestBoardService_Connect_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(ConnectRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(TestBoardServiceServer).ConnectToServer(m, &testBoardServiceConnectToServerServer{ServerStream: stream})
+	return srv.(TestBoardServiceServer).Connect(m, &testBoardServiceConnectServer{ServerStream: stream})
 }
 
-type TestBoardService_ConnectToServerServer interface {
+type TestBoardService_ConnectServer interface {
 	Send(*MessageStream) error
 	grpc.ServerStream
 }
 
-type testBoardServiceConnectToServerServer struct {
+type testBoardServiceConnectServer struct {
 	grpc.ServerStream
 }
 
-func (x *testBoardServiceConnectToServerServer) Send(m *MessageStream) error {
+func (x *testBoardServiceConnectServer) Send(m *MessageStream) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -161,14 +161,14 @@ var TestBoardService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TestBoardServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RegisterClient",
-			Handler:    _TestBoardService_RegisterClient_Handler,
+			MethodName: "Register",
+			Handler:    _TestBoardService_Register_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "ConnectToServer",
-			Handler:       _TestBoardService_ConnectToServer_Handler,
+			StreamName:    "Connect",
+			Handler:       _TestBoardService_Connect_Handler,
 			ServerStreams: true,
 		},
 	},
