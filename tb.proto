@@ -4,31 +4,35 @@ package tb;
 
 option go_package = "github.com/dovydas1928/example-proto";
 
-message Metadata {
-    string version = 1;
+// Define the gRPC service
+service DeviceService {
+    // Registers a device
+    rpc RegisterDevice(DeviceInfo) returns (RegisterDeviceResponse);
+
+    // Bi-directional streaming RPC for communication
+    rpc Communicate(stream DeviceMessage) returns (stream ServerMessage);
 }
 
-message RegisterRequest {
-    string clientId = 1;
-    string clientType = 2;
-    int64 timestamp = 3;
-    Metadata metadata = 4;
+// Device registration information
+message DeviceInfo {
+    string device_id = 1;       // The ID of the device
+    string device_type = 2;     // The type of the device
+    string device_name = 3;     // The name of the device
 }
 
-message Response {
-    string status = 1;
-    string message = 2;
+// Response after registering a device
+message RegisterDeviceResponse {
+    string message = 1;         // A confirmation message from the server
 }
 
-message ConnectRequest {
-  string clientId = 1;
+// Device message to be sent to the server
+message DeviceMessage {
+    string device_id = 1;       // The ID of the device sending the message
+    string json_payload = 2;    // The JSON payload of the message
 }
 
-message MessageStream {
-  string message = 1;
+// Server message to be sent to the device
+message ServerMessage {
+    string json_payload = 1;    // The JSON payload of the message
 }
 
-service TestBoardService {
-    rpc Register (RegisterRequest) returns (Response);
-    rpc Connect (ConnectRequest) returns (stream MessageStream);
-}
